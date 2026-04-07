@@ -1,0 +1,10 @@
+{
+  "name": "@todo-app/api-client",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "dependencies": {
+    "@connectrpc/connect": "^2.0.0",
+    "@bufbuild/protobuf": "^2.0.0"
+  }
+}
