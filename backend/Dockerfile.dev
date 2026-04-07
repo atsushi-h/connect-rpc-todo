@@ -1,0 +1,20 @@
+FROM golang:1.26.1
+
+WORKDIR /app
+
+# Install development tools
+RUN go install github.com/air-verse/air@latest
+RUN go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+RUN go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+
+# Pre-fetch modules
+COPY go.work go.work.sum ./
+COPY backend/go.mod backend/go.sum ./backend/
+COPY gen/go/ ./gen/go/
+RUN cd backend && go mod download
+
+COPY . .
+
+EXPOSE 8080
+
+CMD ["air", "-c", "backend/.air.toml"]
