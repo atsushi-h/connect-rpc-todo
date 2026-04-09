@@ -67,9 +67,15 @@ cd web && pnpm dev
 # Native 起動
 cd native && pnpm expo start
 
-# DB マイグレーション
-cd backend && migrate -path db/migrations -database "postgres://todo:todo@localhost:5432/todo?sslmode=disable" up
+# backend/ での操作 (Makefile 経由)
+cd backend
 
-# sqlc 再生成
-cd backend && sqlc generate
-```
+make migrate-up                          # マイグレーションを適用
+make migrate-down                        # 直前のマイグレーションをロールバック
+make migrate-create NAME=add_users       # マイグレーションファイルを作成
+make sqlc                                # sqlc 再生成
+make build                               # Backend ビルド
+make docker-build                        # Docker イメージをビルド
+make docker-up                           # コンテナを起動
+make docker-down                         # コンテナを停止
+make ssh                                 # バックエンドコンテナに SSH
