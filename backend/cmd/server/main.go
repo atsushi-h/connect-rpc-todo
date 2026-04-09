@@ -1,25 +1,59 @@
 package main
 
 import (
+	"context"
+	"errors"
 	"fmt"
-	"gen/go/todo/v1/todov1connect"
 	"log"
 	"net/http"
-	"todo-app/backend/internal/handler"
+	"os/signal"
+	"syscall"
+	"time"
 
-	"golang.org/x/net/http2"
-	"golang.org/x/net/http2/h2c"
+	"todo-app/backend/internal/initializer"
 )
 
 func main() {
-	mux := http.NewServeMux()
-	todoHandler := &handler.TodoHandler{}
-	path, h := todov1connect.NewTodoServiceHandler(todoHandler)
-	mux.Handle(path, h)
-	addr := ":8080"
-	fmt.Printf("Server listening on %s\n", addr)
-	log.Fatal(http.ListenAndServe(
-		addr,
-		h2c.NewHandler(mux, &http2.Server{}),
-	))
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
+
+	srv, cfg, cleanup, err := initializer.BuildServer(ctx)
+	if err != nil {
+		log.Fatalf("failed to build server: %v", err)
+	}
+
+	errCh := make(chan error, 1)
+
+	go func() {
+		srv.Addr = fmt.Sprintf(":%d", cfg.ServerPort)
+		log.Printf("Server listening on %s", srv.Addr)
+		if err := srv.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
+			errCh <- err
+		}
+		close(errCh)
+	}()
+
+	select {
+	case <-ctx.Done():
+		shutdown(srv, cleanup)
+	case err := <-errCh:
+		if err != nil {
+			cleanup()
+			log.Fatalf("server error: %v", err)
+		}
+	}
+}
+
+func shutdown(srv *http.Server, cleanup func()) {
+	log.Println("Shutting down server...")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Printf("server shutdown error: %v", err)
+	}
+
+	cleanup()
+	log.Println("Server stopped")
 }
