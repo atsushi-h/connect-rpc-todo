@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package auth.v1;
+
+option go_package = "gen/go/auth/v1;authv1";
+
+// Native 専用: Expo が取得した authorization code を JWT に交換する
+message ExchangeTokenRequest {
+  string code          = 1;
+  string code_verifier = 2; // PKCE
+  string redirect_uri  = 3; // Expo deep link URI
+}
+message ExchangeTokenResponse {
+  string access_token = 1;
+}
+
+// 認証済みユーザー情報取得（Web / Native 共通）
+message GetMeRequest {}
+message GetMeResponse {
+  string id           = 1;
+  string email        = 2;
+  string display_name = 3;
+  string avatar_url   = 4;
+}
+
+message SignOutRequest {}
+message SignOutResponse {}
+
+service AuthService {
+  // Native 専用: authorization code を JWT に交換
+  rpc ExchangeToken(ExchangeTokenRequest) returns (ExchangeTokenResponse) {}
+  // 認証済みユーザー情報取得（共通）
+  rpc GetMe(GetMeRequest) returns (GetMeResponse) {}
+  rpc SignOut(SignOutRequest) returns (SignOutResponse) {}
+}
