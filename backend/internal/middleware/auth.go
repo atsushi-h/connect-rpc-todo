@@ -18,8 +18,10 @@ const UserIDKey contextKey = "user_id"
 func NewAuthInterceptor(cfg *config.Config) connect.UnaryInterceptorFunc {
 	return func(next connect.UnaryFunc) connect.UnaryFunc {
 		return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
-			// ExchangeToken のみスキップ（Native PKCE フロー、認証不要）
-			if req.Spec().Procedure == "/auth.v1.AuthService/ExchangeToken" {
+			// ExchangeToken と SignOut はスキップ（認証不要 / 期限切れでもログアウト可能）
+			switch req.Spec().Procedure {
+			case "/auth.v1.AuthService/ExchangeToken",
+				"/auth.v1.AuthService/SignOut":
 				return next(ctx, req)
 			}
 

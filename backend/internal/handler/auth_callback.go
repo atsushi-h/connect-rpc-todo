@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"golang.org/x/oauth2"
@@ -74,6 +75,7 @@ func (h *AuthCallbackHandler) Callback() http.HandlerFunc {
 		// authorization code を access token に交換
 		token, err := h.oauthConfig.Exchange(r.Context(), r.URL.Query().Get("code"))
 		if err != nil {
+			log.Printf("ERROR callback exchange: %v", err)
 			http.Error(w, "failed to exchange token", http.StatusInternalServerError)
 			return
 		}
@@ -81,6 +83,7 @@ func (h *AuthCallbackHandler) Callback() http.HandlerFunc {
 		// Google userinfo 取得
 		userInfo, err := fetchGoogleUserInfo(r.Context(), h.oauthConfig, token)
 		if err != nil {
+			log.Printf("ERROR callback userinfo: %v", err)
 			http.Error(w, "failed to get user info", http.StatusInternalServerError)
 			return
 		}
@@ -93,6 +96,7 @@ func (h *AuthCallbackHandler) Callback() http.HandlerFunc {
 			AvatarUrl:   userInfo.Picture,
 		})
 		if err != nil {
+			log.Printf("ERROR callback upsert: %v", err)
 			http.Error(w, "failed to upsert user", http.StatusInternalServerError)
 			return
 		}
@@ -100,6 +104,7 @@ func (h *AuthCallbackHandler) Callback() http.HandlerFunc {
 		// JWT 生成
 		jwt, err := auth.SignJWT(h.cfg, user.ID.String())
 		if err != nil {
+			log.Printf("ERROR callback sign jwt: %v", err)
 			http.Error(w, "failed to create token", http.StatusInternalServerError)
 			return
 		}
@@ -110,6 +115,7 @@ func (h *AuthCallbackHandler) Callback() http.HandlerFunc {
 			Value:    jwt,
 			Path:     "/",
 			HttpOnly: true,
+			Secure:   h.cfg.CookieSecure,
 			SameSite: http.SameSiteLaxMode,
 			MaxAge:   30 * 24 * 60 * 60,
 		})

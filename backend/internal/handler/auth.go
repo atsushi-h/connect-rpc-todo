@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"log"
 	"net/http"
 
 	"connectrpc.com/connect"
@@ -48,12 +49,13 @@ func (h *AuthHandler) ExchangeToken(
 		oauth2.SetAuthURLParam("code_verifier", req.Msg.CodeVerifier),
 	)
 	if err != nil {
-		return nil, connect.NewError(connect.CodeUnauthenticated, err)
+		return nil, connect.NewError(connect.CodeUnauthenticated, errors.New("invalid authorization code"))
 	}
 
 	userInfo, err := fetchGoogleUserInfo(ctx, &cfg, token)
 	if err != nil {
-		return nil, connect.NewError(connect.CodeInternal, err)
+		log.Printf("ERROR ExchangeToken userinfo: %v", err)
+		return nil, connect.NewError(connect.CodeInternal, errors.New("internal server error"))
 	}
 
 	user, err := h.queries.UpsertUserByGoogleID(ctx, db.UpsertUserByGoogleIDParams{
@@ -63,12 +65,14 @@ func (h *AuthHandler) ExchangeToken(
 		AvatarUrl:   userInfo.Picture,
 	})
 	if err != nil {
-		return nil, connect.NewError(connect.CodeInternal, err)
+		log.Printf("ERROR ExchangeToken upsert: %v", err)
+		return nil, connect.NewError(connect.CodeInternal, errors.New("internal server error"))
 	}
 
 	jwt, err := auth.SignJWT(h.cfg, user.ID.String())
 	if err != nil {
-		return nil, connect.NewError(connect.CodeInternal, err)
+		log.Printf("ERROR ExchangeToken sign jwt: %v", err)
+		return nil, connect.NewError(connect.CodeInternal, errors.New("internal server error"))
 	}
 
 	return connect.NewResponse(&authv1.ExchangeTokenResponse{AccessToken: jwt}), nil
@@ -86,7 +90,8 @@ func (h *AuthHandler) GetMe(
 
 	userID, err := uuid.Parse(userIDStr)
 	if err != nil {
-		return nil, connect.NewError(connect.CodeInternal, err)
+		log.Printf("ERROR GetMe parse uuid: %v", err)
+		return nil, connect.NewError(connect.CodeInternal, errors.New("internal server error"))
 	}
 
 	user, err := h.queries.GetUserByID(ctx, userID)
@@ -94,6 +99,7 @@ func (h *AuthHandler) GetMe(
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, connect.NewError(connect.CodeNotFound, errors.New("user not found"))
 		}
+		log.Printf("ERROR GetMe db: %v", err)
 		return nil, connect.NewError(connect.CodeInternal, errors.New("internal server error"))
 	}
 
@@ -110,14 +116,13 @@ func (h *AuthHandler) SignOut(
 	ctx context.Context,
 	req *connect.Request[authv1.SignOutRequest],
 ) (*connect.Response[authv1.SignOutResponse], error) {
-	// Connect RPC の仕様上、Header への Set-Cookie は req.Header() 経由ではなく
-	// レスポンスヘッダに設定する
 	resp := connect.NewResponse(&authv1.SignOutResponse{})
 	resp.Header().Add("Set-Cookie", (&http.Cookie{
 		Name:     "jwt",
 		Value:    "",
 		Path:     "/",
 		HttpOnly: true,
+		Secure:   h.cfg.CookieSecure,
 		SameSite: http.SameSiteLaxMode,
 		MaxAge:   -1,
 	}).String())
