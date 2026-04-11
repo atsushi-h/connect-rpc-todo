@@ -91,7 +91,10 @@ func (h *AuthHandler) GetMe(
 
 	user, err := h.queries.GetUserByID(ctx, userID)
 	if err != nil {
-		return nil, connect.NewError(connect.CodeNotFound, err)
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, connect.NewError(connect.CodeNotFound, errors.New("user not found"))
+		}
+		return nil, connect.NewError(connect.CodeInternal, errors.New("internal server error"))
 	}
 
 	return connect.NewResponse(&authv1.GetMeResponse{

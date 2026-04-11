@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"golang.org/x/oauth2"
@@ -132,9 +133,16 @@ func fetchGoogleUserInfo(ctx context.Context, cfg *oauth2.Config, token *oauth2.
 	}
 	defer resp.Body.Close()
 
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("google userinfo: unexpected status %d", resp.StatusCode)
+	}
+
 	var info googleUserInfo
 	if err := json.NewDecoder(resp.Body).Decode(&info); err != nil {
 		return nil, err
+	}
+	if info.Sub == "" || info.Email == "" {
+		return nil, fmt.Errorf("google userinfo: missing required fields")
 	}
 	return &info, nil
 }
