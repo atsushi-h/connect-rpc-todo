@@ -5,6 +5,7 @@
 package db
 
 import (
+	"database/sql"
 	"time"
 
 	"github.com/google/uuid"
@@ -17,4 +18,14 @@ type Todo struct {
 	Completed bool
 	CreatedAt time.Time
 	UpdatedAt time.Time
+}
+
+type User struct {
+	ID          uuid.UUID
+	Email       string
+	GoogleID    sql.NullString
+	DisplayName string
+	AvatarUrl   string
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
