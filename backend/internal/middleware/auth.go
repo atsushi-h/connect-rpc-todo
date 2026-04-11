@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"strings"
 
@@ -36,7 +37,7 @@ func NewAuthInterceptor(cfg *config.Config) connect.UnaryInterceptorFunc {
 
 			userID, err := auth.ValidateJWT(cfg, token)
 			if err != nil {
-				return nil, connect.NewError(connect.CodeUnauthenticated, err)
+				return nil, connect.NewError(connect.CodeUnauthenticated, errors.New("invalid or expired token"))
 			}
 
 			ctx = context.WithValue(ctx, UserIDKey, userID)
