@@ -1,12 +1,13 @@
-import { defineConfig } from "vite";
-import { tanstackStart } from "@tanstack/react-start/plugin/vite";
-import viteReact from "@vitejs/plugin-react";
+import { tanstackStart } from '@tanstack/react-start/plugin/vite'
+import viteReact from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
 
 export default defineConfig({
   plugins: [
     tanstackStart({
-      srcDirectory: "app",
+      srcDirectory: 'app',
       vite: {
+        // @ts-expect-error -- TanStack Start の型定義に plugins が未定義だが動作する
         plugins: [viteReact()],
       },
     }),
@@ -16,7 +17,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "~": `${import.meta.dirname}/app`,
+      '~': `${import.meta.dirname}/app`,
     },
   },
-});
+})

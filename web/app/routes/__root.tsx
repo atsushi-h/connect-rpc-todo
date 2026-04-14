@@ -1,54 +1,54 @@
-import { createRootRouteWithContext, Outlet, Scripts, HeadContent } from "@tanstack/react-router";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { TransportProvider } from "@connectrpc/connect-query";
-import { createClient } from "@connectrpc/connect";
-import { createGrpcWebTransport } from "@connectrpc/connect-web";
-import { AuthService } from "@todo-app/api-client/src/auth/v1/auth_pb.js";
-import { transport } from "~/lib/transport";
-import type { ReactNode } from "react";
+import { createClient } from '@connectrpc/connect'
+import { TransportProvider } from '@connectrpc/connect-query'
+import { createGrpcWebTransport } from '@connectrpc/connect-web'
+import { type QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { createRootRouteWithContext, HeadContent, Outlet, Scripts } from '@tanstack/react-router'
+import { AuthService } from '@todo-app/api-client/src/auth/v1/auth_pb.js'
+import type { ReactNode } from 'react'
+import { transport } from '~/lib/transport'
 
 interface RouterContext {
-  queryClient: QueryClient;
+  queryClient: QueryClient
 }
 
 export interface AuthContext {
-  isAuthenticated: boolean;
+  isAuthenticated: boolean
   user?: {
-    id: string;
-    email: string;
-    displayName: string;
-    avatarUrl: string;
-  };
+    id: string
+    email: string
+    displayName: string
+    avatarUrl: string
+  }
 }
 
-const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:8080";
+const API_BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:8080'
 
 function NotFound() {
-  return <p>Not Found</p>;
+  return <p>Not Found</p>
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   notFoundComponent: NotFound,
   beforeLoad: async (): Promise<{ auth: AuthContext }> => {
-    let authTransport = transport;
+    let authTransport = transport
 
-    if (typeof window === "undefined") {
+    if (typeof window === 'undefined') {
       // SSR: 受信リクエストの Cookie をバックエンドへ転送する
-      const { getRequestHeader } = await import("@tanstack/react-start/server");
-      const cookieHeader = getRequestHeader("cookie") ?? "";
+      const { getRequestHeader } = await import('@tanstack/react-start/server')
+      const cookieHeader = getRequestHeader('cookie') ?? ''
       authTransport = createGrpcWebTransport({
         baseUrl: API_BASE,
         fetch: (input, init) => {
-          const headers = new Headers(init?.headers);
-          if (cookieHeader) headers.set("cookie", cookieHeader);
-          return fetch(input as string, { ...(init as RequestInit), headers });
+          const headers = new Headers(init?.headers)
+          if (cookieHeader) headers.set('cookie', cookieHeader)
+          return fetch(input as string, { ...(init as RequestInit), headers })
         },
-      });
+      })
     }
 
-    const client = createClient(AuthService, authTransport);
+    const client = createClient(AuthService, authTransport)
     try {
-      const me = await client.getMe({});
+      const me = await client.getMe({})
       return {
         auth: {
           isAuthenticated: true,
@@ -59,17 +59,17 @@ export const Route = createRootRouteWithContext<RouterContext>()({
             avatarUrl: me.avatarUrl,
           },
         },
-      };
+      }
     } catch {
-      return { auth: { isAuthenticated: false } };
+      return { auth: { isAuthenticated: false } }
     }
   },
   component: RootComponent,
-});
+})
 
 function RootDocument({ children }: { children: ReactNode }) {
   return (
-    <html>
+    <html lang="ja">
       <head>
         <HeadContent />
       </head>
@@ -78,11 +78,11 @@ function RootDocument({ children }: { children: ReactNode }) {
         <Scripts />
       </body>
     </html>
-  );
+  )
 }
 
 function RootComponent() {
-  const { queryClient } = Route.useRouteContext();
+  const { queryClient } = Route.useRouteContext()
   return (
     <RootDocument>
       <TransportProvider transport={transport}>
@@ -91,5 +91,5 @@ function RootComponent() {
         </QueryClientProvider>
       </TransportProvider>
     </RootDocument>
-  );
+  )
 }
