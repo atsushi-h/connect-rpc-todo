@@ -1,5 +1,8 @@
 {
   "name": "connect-rpc-todo",
   "private": true,
-  "packageManager": "pnpm@10.32.1"
+  "packageManager": "pnpm@10.32.1",
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild"]
+  }
 }

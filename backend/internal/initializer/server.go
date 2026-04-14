@@ -6,10 +6,12 @@ import (
 	"net/http"
 
 	_ "github.com/lib/pq"
+	"github.com/rs/cors"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 
 	"connectrpc.com/connect"
+	connectcors "connectrpc.com/cors"
 	"gen/go/auth/v1/authv1connect"
 	"gen/go/todo/v1/todov1connect"
 	"todo-app/backend/internal/config"
@@ -57,8 +59,16 @@ func BuildServer(_ context.Context) (*http.Server, *config.Config, func(), error
 	path, h := todov1connect.NewTodoServiceHandler(todoHandler, interceptors)
 	mux.Handle(path, h)
 
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{cfg.WebFrontendURL},
+		AllowedMethods:   connectcors.AllowedMethods(),
+		AllowedHeaders:   connectcors.AllowedHeaders(),
+		ExposedHeaders:   connectcors.ExposedHeaders(),
+		AllowCredentials: true,
+	})
+
 	srv := &http.Server{
-		Handler: h2c.NewHandler(mux, &http2.Server{}),
+		Handler: h2c.NewHandler(c.Handler(mux), &http2.Server{}),
 	}
 
 	return srv, cfg, cleanup, nil
