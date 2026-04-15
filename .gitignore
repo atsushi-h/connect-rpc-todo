@@ -4,3 +4,8 @@ dist/
 docs/plan/
 tmp/
 .DS_Store
+
+# Expo generated native projects (CNG approach)
+native/.expo/
+native/ios/
+native/android/
