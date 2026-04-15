@@ -28,9 +28,17 @@ type AuthHandler struct {
 }
 
 func NewAuthHandler(queries *db.Queries, cfg *config.Config) *AuthHandler {
+	// ExchangeToken は Native 専用。GOOGLE_NATIVE_CLIENT_ID が設定されていればそちらを使用。
+	// Native クライアントは public client のためシークレット不要（PKCE が証明を担う）。
+	clientID := cfg.GoogleNativeClientID
+	clientSecret := ""
+	if clientID == "" {
+		clientID = cfg.GoogleClientID
+		clientSecret = cfg.GoogleClientSecret
+	}
 	oauthConfig := &oauth2.Config{
-		ClientID:     cfg.GoogleClientID,
-		ClientSecret: cfg.GoogleClientSecret,
+		ClientID:     clientID,
+		ClientSecret: clientSecret,
 		Scopes:       []string{"openid", "email", "profile"},
 		Endpoint:     google.Endpoint,
 	}

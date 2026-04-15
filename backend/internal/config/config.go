@@ -7,14 +7,15 @@ import (
 )
 
 type Config struct {
-	DatabaseURL        string
-	ServerPort         int
-	GoogleClientID     string
-	GoogleClientSecret string
-	GoogleCallbackURL  string
-	WebFrontendURL     string
-	JWTSecret          string
-	CookieSecure       bool
+	DatabaseURL          string
+	ServerPort           int
+	GoogleClientID       string // Web OAuth クライアント（auth/callback フロー用）
+	GoogleClientSecret   string
+	GoogleNativeClientID string // iOS/Android OAuth クライアント（PKCE フロー用、シークレット不要）
+	GoogleCallbackURL    string
+	WebFrontendURL       string
+	JWTSecret            string
+	CookieSecure         bool
 }
 
 func Load() (*Config, error) {
@@ -43,15 +44,16 @@ func Load() (*Config, error) {
 	}
 
 	googleClientSecret := os.Getenv("GOOGLE_CLIENT_SECRET")
-	if googleClientSecret == "" {
-		return nil, errors.New("GOOGLE_CLIENT_SECRET is not set")
-	}
+
+	// Native クライアント（iOS/Android）は省略可能。未設定時は GOOGLE_CLIENT_ID にフォールバック
+	googleNativeClientID := os.Getenv("GOOGLE_NATIVE_CLIENT_ID")
 
 	return &Config{
-		DatabaseURL:        dbURL,
-		ServerPort:         port,
-		GoogleClientID:     googleClientID,
-		GoogleClientSecret: googleClientSecret,
+		DatabaseURL:          dbURL,
+		ServerPort:           port,
+		GoogleClientID:       googleClientID,
+		GoogleClientSecret:   googleClientSecret,
+		GoogleNativeClientID: googleNativeClientID,
 		GoogleCallbackURL:  getEnvOrDefault("GOOGLE_CALLBACK_URL", "http://localhost:8080/auth/callback"),
 		WebFrontendURL:     getEnvOrDefault("WEB_FRONTEND_URL", "http://localhost:3000"),
 		JWTSecret:          jwtSecret,
