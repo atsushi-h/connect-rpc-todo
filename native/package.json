@@ -6,6 +6,8 @@
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
+    "prebuild": "expo prebuild",
+    "prebuild:clean": "expo prebuild --clean",
     "lint": "biome check",
     "lint:fix": "biome check --fix --unsafe",
     "type:check": "tsc --noEmit"
