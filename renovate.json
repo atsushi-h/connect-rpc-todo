@@ -1,0 +1,82 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":semanticCommitTypeAll(chore)",
+    "customManagers:biomeVersions"
+  ],
+  "labels": [
+    "dependencies"
+  ],
+  "packageRules": [
+    {
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "labels": [
+        "dependencies",
+        "major"
+      ]
+    },
+    {
+      "matchUpdateTypes": [
+        "minor"
+      ],
+      "labels": [
+        "dependencies",
+        "minor"
+      ]
+    },
+    {
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "labels": [
+        "dependencies",
+        "patch"
+      ],
+      "automerge": true
+    },
+    {
+      "matchManagers": [
+        "github-actions"
+      ],
+      "automerge": true
+    },
+    {
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "addLabels": [
+        "devDependencies"
+      ]
+    },
+    {
+      "matchPackageNames": [
+        "@biomejs/biome"
+      ],
+      "groupName": "biome",
+      "minimumReleaseAge": "3 days"
+    }
+  ],
+  "prConcurrentLimit": 30,
+  "prHourlyLimit": 10,
+  "automergeType": "pr",
+  "automergeStrategy": "squash",
+  "semanticCommitScope": "deps",
+  "commitMessageTopic": "{{depName}}",
+  "commitMessageExtra": "to {{newVersion}}",
+  "vulnerabilityAlerts": {
+    "labels": [
+      "dependencies",
+      "security"
+    ],
+    "automerge": false
+  },
+  "postUpdateOptions": [
+    "pnpmDedupe"
+  ],
+  "npm": {
+    "minimumReleaseAge": "3 days"
+  }
+}

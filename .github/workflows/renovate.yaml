@@ -1,0 +1,30 @@
+name: Renovate
+
+on:
+  schedule:
+    - cron: '0 21 * * 5' # 毎週土曜 6:00 JST
+  workflow_dispatch:
+
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
+
+      # GitHub AppからInstallation Tokenを生成
+      - name: Generate token
+        id: generate-token
+        uses: actions/create-github-app-token@v3.0.0
+        with:
+          app-id: ${{ secrets.MY_RENOVATE_APP_ID }}
+          private-key: ${{ secrets.MY_RENOVATE_APP_PRIVATE_KEY }}
+
+      - name: Self-hosted Renovate
+        uses: renovatebot/github-action@v46.1.9
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+          configurationFile: renovate.json
+        env:
+          RENOVATE_REPOSITORIES: ${{ github.repository }}
