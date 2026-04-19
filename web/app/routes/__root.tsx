@@ -5,6 +5,7 @@ import { type QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createRootRouteWithContext, HeadContent, Outlet, Scripts } from '@tanstack/react-router'
 import { AuthService } from '@todo-app/api-client/src/auth/v1/auth_pb.js'
 import type { ReactNode } from 'react'
+import { env } from '~/lib/env'
 import { transport } from '~/lib/transport'
 
 interface RouterContext {
@@ -21,7 +22,7 @@ export interface AuthContext {
   }
 }
 
-const API_BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:8080'
+const API_BASE = env.VITE_API_URL
 
 function NotFound() {
   return <p>Not Found</p>

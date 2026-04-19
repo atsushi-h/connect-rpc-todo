@@ -1,4 +1,5 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
+import { env } from '~/lib/env'
 
 export const Route = createFileRoute('/login')({
   beforeLoad: ({ context }) => {
@@ -10,7 +11,7 @@ export const Route = createFileRoute('/login')({
 })
 
 function LoginPage() {
-  const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:8080'
+  const apiUrl = env.VITE_API_URL
   return (
     <div>
       <h1>Todo App</h1>
