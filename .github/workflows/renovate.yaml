@@ -26,5 +26,6 @@ jobs:
         with:
           token: ${{ steps.generate-token.outputs.token }}
           configurationFile: renovate.json
+          renovate-version: 43.129.0
         env:
           RENOVATE_REPOSITORIES: ${{ github.repository }}
