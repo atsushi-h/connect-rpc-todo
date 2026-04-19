@@ -4,13 +4,14 @@ import * as AuthSession from 'expo-auth-session'
 import { router } from 'expo-router'
 import { useEffect } from 'react'
 import { Button, Text, View } from 'react-native'
+import { env } from '../../lib/env'
 import { storage } from '../../lib/storage'
 import { transport } from '../../lib/transport'
 
 // iOS OAuth クライアント用 reverse client ID スキーム
 // 例: com.googleusercontent.apps.338570704218-xxx:/
 // Google は iOS OAuth クライアントに対してこの形式を Console 登録なしで自動許可する
-const clientId = process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID ?? ''
+const clientId = env.EXPO_PUBLIC_GOOGLE_CLIENT_ID
 const reverseClientId = `com.googleusercontent.apps.${clientId.replace('.apps.googleusercontent.com', '')}`
 // native パラメータで明示的に指定（expo-auth-session Google プロバイダと同じパターン）
 const redirectUri = AuthSession.makeRedirectUri({ native: `${reverseClientId}:/oauthredirect` })
@@ -22,7 +23,7 @@ export default function LoginScreen() {
 
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
     {
-      clientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID ?? '',
+      clientId: env.EXPO_PUBLIC_GOOGLE_CLIENT_ID,
       scopes: ['openid', 'profile', 'email'],
       codeChallengeMethod: AuthSession.CodeChallengeMethod.S256, // PKCE
       redirectUri,
