@@ -54,10 +54,10 @@ func Load() (*Config, error) {
 		GoogleClientID:       googleClientID,
 		GoogleClientSecret:   googleClientSecret,
 		GoogleNativeClientID: googleNativeClientID,
-		GoogleCallbackURL:  getEnvOrDefault("GOOGLE_CALLBACK_URL", "http://localhost:8080/auth/callback"),
-		WebFrontendURL:     getEnvOrDefault("WEB_FRONTEND_URL", "http://localhost:3000"),
-		JWTSecret:          jwtSecret,
-		CookieSecure:       os.Getenv("COOKIE_SECURE") == "true",
+		GoogleCallbackURL:    getEnvOrDefault("GOOGLE_CALLBACK_URL", "http://localhost:8080/auth/callback"),
+		WebFrontendURL:       getEnvOrDefault("WEB_FRONTEND_URL", "http://localhost:3000"),
+		JWTSecret:            jwtSecret,
+		CookieSecure:         os.Getenv("COOKIE_SECURE") == "true",
 	}, nil
 }
 

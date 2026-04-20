@@ -58,7 +58,13 @@ migrate-create:
 # Tools
 # -------------------------------------------------------------------
 
-.PHONY: sqlc
+.PHONY: lint fmt sqlc
+
+lint:
+	$(DOCKER_EXEC) sh -c 'cd backend && golangci-lint run ./...'
+
+fmt:
+	$(DOCKER_EXEC) sh -c 'cd backend && golangci-lint fmt ./...'
 
 sqlc:
 	$(DOCKER_EXEC) sqlc generate -f backend/sqlc.yaml

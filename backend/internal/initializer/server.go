@@ -31,11 +31,11 @@ func BuildServer(_ context.Context) (*http.Server, *config.Config, func(), error
 		return nil, nil, func() {}, err
 	}
 	if err := conn.Ping(); err != nil {
-		conn.Close()
+		_ = conn.Close()
 		return nil, nil, func() {}, err
 	}
 	cleanup := func() {
-		conn.Close()
+		_ = conn.Close()
 	}
 
 	queries := db.New(conn)
