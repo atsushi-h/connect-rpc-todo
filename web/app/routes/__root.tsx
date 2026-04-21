@@ -3,6 +3,7 @@ import { TransportProvider } from '@connectrpc/connect-query'
 import { createGrpcWebTransport } from '@connectrpc/connect-web'
 import { type QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createRootRouteWithContext, HeadContent, Outlet, Scripts } from '@tanstack/react-router'
+import { createIsomorphicFn } from '@tanstack/react-start'
 import { AuthService } from '@todo-app/api-client/src/auth/v1/auth_pb.js'
 import type { ReactNode } from 'react'
 import { env } from '~/lib/env'
@@ -24,6 +25,22 @@ export interface AuthContext {
 
 const API_BASE = env.VITE_API_URL
 
+// SSR 時はリクエストの Cookie をバックエンドへ転送するトランスポートを使用する
+const getAuthTransport = createIsomorphicFn()
+  .client(() => transport)
+  .server(async () => {
+    const { getRequestHeader } = await import('@tanstack/react-start/server')
+    const cookieHeader = getRequestHeader('cookie') ?? ''
+    return createGrpcWebTransport({
+      baseUrl: API_BASE,
+      fetch: (input, init) => {
+        const headers = new Headers(init?.headers)
+        if (cookieHeader) headers.set('cookie', cookieHeader)
+        return fetch(input as string, { ...(init as RequestInit), headers })
+      },
+    })
+  })
+
 function NotFound() {
   return <p>Not Found</p>
 }
@@ -31,22 +48,7 @@ function NotFound() {
 export const Route = createRootRouteWithContext<RouterContext>()({
   notFoundComponent: NotFound,
   beforeLoad: async (): Promise<{ auth: AuthContext }> => {
-    let authTransport = transport
-
-    if (typeof window === 'undefined') {
-      // SSR: 受信リクエストの Cookie をバックエンドへ転送する
-      const { getRequestHeader } = await import('@tanstack/react-start/server')
-      const cookieHeader = getRequestHeader('cookie') ?? ''
-      authTransport = createGrpcWebTransport({
-        baseUrl: API_BASE,
-        fetch: (input, init) => {
-          const headers = new Headers(init?.headers)
-          if (cookieHeader) headers.set('cookie', cookieHeader)
-          return fetch(input as string, { ...(init as RequestInit), headers })
-        },
-      })
-    }
-
+    const authTransport = await getAuthTransport()
     const client = createClient(AuthService, authTransport)
     try {
       const me = await client.getMe({})
