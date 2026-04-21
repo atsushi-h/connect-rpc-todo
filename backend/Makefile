@@ -2,6 +2,10 @@ BACKEND_CONTAINER_NAME ?= connect-rpc-todo-backend
 
 MIGRATION_DIR ?= backend/db/migrations
 NAME          ?=
+PKG           ?=
+FILE          ?=
+RUN           ?=
+TEST_FLAGS    ?= -count=1
 
 ifneq (,$(wildcard ../.env))
 include ../.env
@@ -14,10 +18,35 @@ DOCKER_EXEC := docker exec -i $(BACKEND_CONTAINER_NAME)
 # App
 # -------------------------------------------------------------------
 
-.PHONY: build
+.PHONY: build test test-pkg test-file test-run
 
 build:
 	$(DOCKER_EXEC) go build ./backend/...
+
+# -------------------------------------------------------------------
+# Test
+# -------------------------------------------------------------------
+
+# 全テストを実行
+test:
+	$(DOCKER_EXEC) sh -c 'cd backend && go test $(TEST_FLAGS) ./...'
+
+# パッケージ単位でテスト実行。例: make test-pkg PKG=./internal/auth
+test-pkg:
+	@test -n "$(PKG)" || (echo "PKG is required, e.g. make test-pkg PKG=./internal/auth"; exit 1)
+	$(DOCKER_EXEC) sh -c 'cd backend && go test $(TEST_FLAGS) $(PKG)'
+
+# 特定ファイルのテストを実行。例: make test-file FILE=internal/auth/jwt_test.go
+test-file:
+	@test -n "$(FILE)" || (echo "FILE is required, e.g. make test-file FILE=internal/auth/jwt_test.go"; exit 1)
+	@dir=$$(dirname $(FILE)); \
+	$(DOCKER_EXEC) sh -c 'cd backend && go test $(TEST_FLAGS) ./$$dir'
+
+# 特定テスト名（regexp）を実行。例: make test-run PKG=./internal/auth RUN=TestSignAndValidateJWT
+test-run:
+	@test -n "$(PKG)" || (echo "PKG is required, e.g. make test-run PKG=./internal/auth RUN=TestSignAndValidateJWT"; exit 1)
+	@test -n "$(RUN)" || (echo "RUN is required, e.g. make test-run PKG=./internal/auth RUN=TestSignAndValidateJWT"; exit 1)
+	$(DOCKER_EXEC) sh -c 'cd backend && go test $(TEST_FLAGS) -run $(RUN) $(PKG)'
 
 # -------------------------------------------------------------------
 # Docker
