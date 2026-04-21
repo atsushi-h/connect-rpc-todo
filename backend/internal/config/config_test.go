@@ -19,14 +19,20 @@ func clearEnv(t *testing.T) {
 	saved := make(map[string]string, len(keys))
 	for _, k := range keys {
 		saved[k] = os.Getenv(k)
-		os.Unsetenv(k)
+		if err := os.Unsetenv(k); err != nil {
+			t.Fatalf("os.Unsetenv(%q): %v", k, err)
+		}
 	}
 	t.Cleanup(func() {
 		for k, v := range saved {
 			if v != "" {
-				os.Setenv(k, v)
+				if err := os.Setenv(k, v); err != nil {
+					t.Errorf("os.Setenv(%q): %v", k, err)
+				}
 			} else {
-				os.Unsetenv(k)
+				if err := os.Unsetenv(k); err != nil {
+					t.Errorf("os.Unsetenv(%q): %v", k, err)
+				}
 			}
 		}
 	})
