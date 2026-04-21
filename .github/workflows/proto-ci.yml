@@ -1,0 +1,44 @@
+name: Proto CI
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "proto/**"
+      - "gen/**"
+      - ".github/workflows/proto-ci.yml"
+
+jobs:
+  lint-and-generate:
+    name: Lint and Generate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+
+      - name: Setup mise
+        uses: jdx/mise-action@v4.0.1
+        with:
+          install: true
+          cache: true
+
+      - name: Cache buf modules
+        uses: actions/cache@v5.0.5
+        with:
+          path: ~/.cache/buf
+          key: ${{ runner.os }}-buf-${{ hashFiles('proto/buf.gen.yaml', 'proto/buf.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-buf-
+
+      - name: Lint
+        run: buf lint
+        working-directory: proto
+
+      - name: Generate
+        run: buf generate
+        working-directory: proto
+
+      - name: Check generated code is up-to-date
+        run: git diff --exit-code gen/
