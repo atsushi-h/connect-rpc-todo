@@ -1,0 +1,52 @@
+name: Native CI
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "native/**"
+      - "gen/ts/**"
+      - ".github/workflows/native-ci.yml"
+
+jobs:
+  ci:
+    name: CI
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: native
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+
+      - name: Setup mise
+        uses: jdx/mise-action@v4.0.1
+        with:
+          install: true
+          cache: true
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        run: echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm store
+        uses: actions/cache@v5.0.5
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Type Check
+        run: pnpm type:check
+
+      - name: Build (prebuild)
+        run: pnpm run prebuild -- --no-install
