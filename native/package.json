@@ -26,7 +26,7 @@
     "expo-router": "55.0.13",
     "expo-secure-store": "55.0.13",
     "react": "19.2.5",
-    "react-native": "0.85.1",
+    "react-native": "0.85.2",
     "zod": "4.3.6"
   },
   "devDependencies": {
