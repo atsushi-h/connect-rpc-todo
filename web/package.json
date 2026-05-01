@@ -11,21 +11,21 @@
     "type:check": "tsc --noEmit"
   },
   "dependencies": {
-    "@bufbuild/protobuf": "2.11.0",
+    "@bufbuild/protobuf": "2.12.0",
     "@connectrpc/connect": "2.1.1",
     "@connectrpc/connect-query": "2.2.0",
     "@connectrpc/connect-web": "2.1.1",
     "@t3-oss/env-core": "0.13.11",
     "@tanstack/react-query": "5.99.2",
-    "@tanstack/react-router": "1.168.23",
-    "@tanstack/react-start": "1.167.42",
+    "@tanstack/react-router": "1.168.25",
+    "@tanstack/react-start": "1.167.50",
     "@todo-app/api-client": "workspace:*",
     "react": "19.2.5",
     "react-dom": "19.2.5",
     "zod": "4.3.6"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.12",
+    "@biomejs/biome": "2.4.13",
     "@types/node": "25.6.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
