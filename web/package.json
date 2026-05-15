@@ -16,21 +16,21 @@
     "@connectrpc/connect-query": "2.2.0",
     "@connectrpc/connect-web": "2.1.1",
     "@t3-oss/env-core": "0.13.11",
-    "@tanstack/react-query": "5.100.9",
+    "@tanstack/react-query": "5.100.10",
     "@tanstack/react-router": "1.169.2",
-    "@tanstack/react-start": "1.167.64",
+    "@tanstack/react-start": "1.167.65",
     "@todo-app/api-client": "workspace:*",
     "react": "19.2.6",
     "react-dom": "19.2.6",
-    "zod": "4.3.6"
+    "zod": "4.4.3"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.14",
-    "@types/node": "25.6.0",
+    "@biomejs/biome": "2.4.15",
+    "@types/node": "25.7.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "6.0.1",
     "typescript": "6.0.3",
-    "vite": "8.0.10"
+    "vite": "8.0.12"
   }
 }
