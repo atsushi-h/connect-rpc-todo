@@ -18,7 +18,7 @@
     "@t3-oss/env-core": "0.13.11",
     "@tanstack/react-query": "5.100.9",
     "@tanstack/react-router": "1.169.2",
-    "@tanstack/react-start": "1.167.64",
+    "@tanstack/react-start": "1.167.65",
     "@todo-app/api-client": "workspace:*",
     "react": "19.2.5",
     "react-dom": "19.2.5",
