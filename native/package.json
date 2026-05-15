@@ -25,7 +25,7 @@
     "expo-crypto": "55.0.14",
     "expo-router": "55.0.14",
     "expo-secure-store": "55.0.13",
-    "react": "19.2.5",
+    "react": "19.2.6",
     "react-native": "0.85.3",
     "zod": "4.3.6"
   },
