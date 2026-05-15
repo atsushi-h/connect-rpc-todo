@@ -27,7 +27,7 @@
     "expo-secure-store": "55.0.13",
     "react": "19.2.5",
     "react-native": "0.85.3",
-    "zod": "4.3.6"
+    "zod": "4.4.3"
   },
   "devDependencies": {
     "@babel/core": "7.29.0",
