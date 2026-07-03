@@ -25,7 +25,7 @@ jobs:
           cache: true
 
       - name: Cache buf modules
-        uses: actions/cache@v5.0.5
+        uses: actions/cache@v5.1.0
         with:
           path: ~/.cache/buf
           key: ${{ runner.os }}-buf-${{ hashFiles('proto/buf.gen.yaml', 'proto/buf.yaml') }}
