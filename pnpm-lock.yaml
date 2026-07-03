@@ -15,7 +15,7 @@ importers:
         version: 2.12.0
       '@connectrpc/connect':
         specifier: ^2.0.0
-        version: 2.1.1(@bufbuild/protobuf@2.12.0)
+        version: 2.1.2(@bufbuild/protobuf@2.12.0)
 
   native:
     dependencies:
@@ -23,14 +23,14 @@ importers:
         specifier: 2.12.0
         version: 2.12.0
       '@connectrpc/connect':
-        specifier: 2.1.1
-        version: 2.1.1(@bufbuild/protobuf@2.12.0)
+        specifier: 2.1.2
+        version: 2.1.2(@bufbuild/protobuf@2.12.0)
       '@connectrpc/connect-query':
         specifier: 2.2.0
-        version: 2.2.0(@bufbuild/protobuf@2.12.0)(@connectrpc/connect@2.1.1(@bufbuild/protobuf@2.12.0))(@tanstack/query-core@5.101.2)(@tanstack/react-query@5.101.2(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 2.2.0(@bufbuild/protobuf@2.12.0)(@connectrpc/connect@2.1.2(@bufbuild/protobuf@2.12.0))(@tanstack/query-core@5.101.2)(@tanstack/react-query@5.101.2(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@connectrpc/connect-web':
         specifier: 2.1.2
-        version: 2.1.2(@bufbuild/protobuf@2.12.0)(@connectrpc/connect@2.1.1(@bufbuild/protobuf@2.12.0))
+        version: 2.1.2(@bufbuild/protobuf@2.12.0)(@connectrpc/connect@2.1.2(@bufbuild/protobuf@2.12.0))
       '@t3-oss/env-core':
         specifier: 0.13.11
         version: 0.13.11(typescript@6.0.3)(zod@4.4.3)
@@ -84,14 +84,14 @@ importers:
         specifier: 2.12.0
         version: 2.12.0
       '@connectrpc/connect':
-        specifier: 2.1.1
-        version: 2.1.1(@bufbuild/protobuf@2.12.0)
+        specifier: 2.1.2
+        version: 2.1.2(@bufbuild/protobuf@2.12.0)
       '@connectrpc/connect-query':
         specifier: 2.2.0
-        version: 2.2.0(@bufbuild/protobuf@2.12.0)(@connectrpc/connect@2.1.1(@bufbuild/protobuf@2.12.0))(@tanstack/query-core@5.101.2)(@tanstack/react-query@5.101.2(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 2.2.0(@bufbuild/protobuf@2.12.0)(@connectrpc/connect@2.1.2(@bufbuild/protobuf@2.12.0))(@tanstack/query-core@5.101.2)(@tanstack/react-query@5.101.2(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@connectrpc/connect-web':
         specifier: 2.1.2
-        version: 2.1.2(@bufbuild/protobuf@2.12.0)(@connectrpc/connect@2.1.1(@bufbuild/protobuf@2.12.0))
+        version: 2.1.2(@bufbuild/protobuf@2.12.0)(@connectrpc/connect@2.1.2(@bufbuild/protobuf@2.12.0))
       '@t3-oss/env-core':
         specifier: 0.13.11
         version: 0.13.11(typescript@6.0.3)(zod@4.4.3)
@@ -672,8 +672,8 @@ packages:
       '@bufbuild/protobuf': ^2.7.0
       '@connectrpc/connect': 2.1.2
 
-  '@connectrpc/connect@2.1.1':
-    resolution: {integrity: sha512-JzhkaTvM73m2K1URT6tv53k2RwngSmCXLZJgK580qNQOXRzZRR/BCMfZw3h+90JpnG6XksP5bYT+cz0rpUzUWQ==}
+  '@connectrpc/connect@2.1.2':
+    resolution: {integrity: sha512-MXkBijtcX09R10Eb6sFeIetc6w6746eio6xtfuyVOH7oQAacT1X0GzMIQFux6Qy8cq3W/T5qX5Bei8YbFtmRGA==}
     peerDependencies:
       '@bufbuild/protobuf': ^2.7.0
 
@@ -4219,29 +4219,29 @@ snapshots:
 
   '@bufbuild/protobuf@2.12.0': {}
 
-  '@connectrpc/connect-query-core@2.2.0(@bufbuild/protobuf@2.12.0)(@connectrpc/connect@2.1.1(@bufbuild/protobuf@2.12.0))(@tanstack/query-core@5.101.2)':
+  '@connectrpc/connect-query-core@2.2.0(@bufbuild/protobuf@2.12.0)(@connectrpc/connect@2.1.2(@bufbuild/protobuf@2.12.0))(@tanstack/query-core@5.101.2)':
     dependencies:
       '@bufbuild/protobuf': 2.12.0
-      '@connectrpc/connect': 2.1.1(@bufbuild/protobuf@2.12.0)
+      '@connectrpc/connect': 2.1.2(@bufbuild/protobuf@2.12.0)
       '@tanstack/query-core': 5.101.2
 
-  '@connectrpc/connect-query@2.2.0(@bufbuild/protobuf@2.12.0)(@connectrpc/connect@2.1.1(@bufbuild/protobuf@2.12.0))(@tanstack/query-core@5.101.2)(@tanstack/react-query@5.101.2(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
+  '@connectrpc/connect-query@2.2.0(@bufbuild/protobuf@2.12.0)(@connectrpc/connect@2.1.2(@bufbuild/protobuf@2.12.0))(@tanstack/query-core@5.101.2)(@tanstack/react-query@5.101.2(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
     dependencies:
       '@bufbuild/protobuf': 2.12.0
-      '@connectrpc/connect': 2.1.1(@bufbuild/protobuf@2.12.0)
-      '@connectrpc/connect-query-core': 2.2.0(@bufbuild/protobuf@2.12.0)(@connectrpc/connect@2.1.1(@bufbuild/protobuf@2.12.0))(@tanstack/query-core@5.101.2)
+      '@connectrpc/connect': 2.1.2(@bufbuild/protobuf@2.12.0)
+      '@connectrpc/connect-query-core': 2.2.0(@bufbuild/protobuf@2.12.0)(@connectrpc/connect@2.1.2(@bufbuild/protobuf@2.12.0))(@tanstack/query-core@5.101.2)
       '@tanstack/react-query': 5.101.2(react@19.2.6)
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
     transitivePeerDependencies:
       - '@tanstack/query-core'
 
-  '@connectrpc/connect-web@2.1.2(@bufbuild/protobuf@2.12.0)(@connectrpc/connect@2.1.1(@bufbuild/protobuf@2.12.0))':
+  '@connectrpc/connect-web@2.1.2(@bufbuild/protobuf@2.12.0)(@connectrpc/connect@2.1.2(@bufbuild/protobuf@2.12.0))':
     dependencies:
       '@bufbuild/protobuf': 2.12.0
-      '@connectrpc/connect': 2.1.1(@bufbuild/protobuf@2.12.0)
+      '@connectrpc/connect': 2.1.2(@bufbuild/protobuf@2.12.0)
 
-  '@connectrpc/connect@2.1.1(@bufbuild/protobuf@2.12.0)':
+  '@connectrpc/connect@2.1.2(@bufbuild/protobuf@2.12.0)':
     dependencies:
       '@bufbuild/protobuf': 2.12.0
 
@@ -5126,7 +5126,9 @@ snapshots:
       metro-runtime: 0.84.4
     transitivePeerDependencies:
       - '@babel/core'
+      - bufferutil
       - supports-color
+      - utf-8-validate
 
   '@react-native/normalize-colors@0.86.0': {}
 
